@@ -1,0 +1,14 @@
+[
+  {
+    "name": "discount10",
+    "discount": 0.10
+  },
+  {
+    "name": "discount50",
+    "discount": 0.50
+  },
+  {
+    "name": "discount80",
+    "discount": 0.80
+  }
+]

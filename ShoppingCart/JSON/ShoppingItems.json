@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Pancake Mix",
+    "weight": {
+      "unitOfMeasure": "g",
+      "value": 155
+    },
+    "price": 6.99
+  },
+  {
+    "name": "Golden Syrup",
+    "weight": {
+      "unitOfMeasure": "ml",
+      "value": 700
+    },
+    "price": 1.99
+  },
+  {
+    "name": "Frying Pan",
+    "price": 15.58
+  }
+]
