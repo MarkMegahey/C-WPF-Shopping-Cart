@@ -129,5 +129,27 @@ namespace ShoppingCart
             }
         }
 
+        private void Coupon_Added_Click(object sender, RoutedEventArgs e)
+        {
+            Coupon couponToActivate = coupons.FirstOrDefault(x => x.name == Coupon_Field.Text.ToLower());
+
+            Coupon_Field.Text = "";
+            if (couponToActivate == null || usedCoupons.FirstOrDefault(x => x == couponToActivate) != null ? true : false)
+            {
+                MessageBox.Show("This is not a valid Coupon code.");
+                return;
+            }
+
+            if (activeCoupon != null)
+            {
+                MessageBox.Show("A coupon has already been used during this checkout session.");
+                return;
+            }
+
+            Discounted_Stackpanel.Visibility = Visibility.Visible;
+            activeCoupon = couponToActivate;
+            CartTotal.Text = GetTotal();
+        }
+
     }
 }
