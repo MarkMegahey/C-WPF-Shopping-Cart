@@ -11,17 +11,14 @@ using ShoppingCart.Models;
 
 namespace ShoppingCart
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
-        public ObservableCollection<Item> items = new ObservableCollection<Item>();
-        public ObservableCollection<Item> cartItems = new ObservableCollection<Item>();
+        ObservableCollection<Item> items;
+        ObservableCollection<Item> cartItems;
 
-        public ObservableCollection<Coupon> coupons = new ObservableCollection<Coupon>();
-        public ObservableCollection<Coupon> usedCoupons = new ObservableCollection<Coupon>();
-        public Coupon activeCoupons;
+        ObservableCollection<Coupon> coupons;
+        ObservableCollection<Coupon> usedCoupons;
+        Coupon activeCoupon;
 
         public double cartTotal = 0;
         public double discountedTotal = 0;
@@ -29,11 +26,17 @@ namespace ShoppingCart
         public MainWindow()
         {
             InitializeComponent();
+
+            items = new ObservableCollection<Item>();
+            cartItems = new ObservableCollection<Item>();
+            coupons = new ObservableCollection<Coupon>();
+            usedCoupons = new ObservableCollection<Coupon>();
+
             GetItems();
             GetCoupons();
         }
 
-        public void GetItems()
+        private void GetItems()
         {
             using (StreamReader r = new StreamReader(@"JSON\ShoppingItems.json"))
             {
@@ -45,7 +48,7 @@ namespace ShoppingCart
             }
         }
 
-        public void GetCoupons()
+        private void GetCoupons()
         {
             using (StreamReader r = new StreamReader(@"JSON\CouponCodes.json"))
             {
@@ -66,17 +69,17 @@ namespace ShoppingCart
             ShoppingItems.SelectedItem = null;
         }
 
-        public string GetTotal()
+        private string GetTotal()
         {
             cartTotal = 0;
 
             foreach (var item in cartItems)
                 cartTotal += item.price;
 
-            if (activeCoupons != null)
+            if (activeCoupon != null)
             {
                 Discounted_Stackpanel.Visibility = Visibility.Visible;
-                discountedTotal = cartTotal - (cartTotal * activeCoupons.discount);
+                discountedTotal = cartTotal - (cartTotal * activeCoupon.discount);
                 DiscountTotal.Text = discountedTotal.ToString("C2");
             }
 
@@ -93,15 +96,15 @@ namespace ShoppingCart
 
         private void CheckOut_Click(object sender, RoutedEventArgs e)
         {
-            string Cost;
-            if (activeCoupons == null)
-                 Cost = GetTotal();
+            string cost;
+            if (activeCoupon == null)
+                 cost = GetTotal();
             else
-                 Cost = discountedTotal.ToString("C2");
+                 cost = discountedTotal.ToString("C2");
 
 
             string message = $"Total Item Count: {cartItems.Count}" + Environment.NewLine +
-                                   $"Total Cost: {Cost}" + Environment.NewLine +
+                                   $"Total Cost: {cost}" + Environment.NewLine +
                                    Environment.NewLine +
                                    $"Would you like to place your order?";
             
@@ -117,8 +120,8 @@ namespace ShoppingCart
             if (result == MessageBoxResult.Yes)
             {
                 MessageBox.Show("Your order has been placed.");
-                usedCoupons.Add(activeCoupons);
-                activeCoupons = null;
+                usedCoupons.Add(activeCoupon);
+                activeCoupon = null;
                 Discounted_Stackpanel.Visibility = Visibility.Collapsed;
                 cartItems.Clear();
                 CartTotal.Text = "0";
@@ -126,26 +129,5 @@ namespace ShoppingCart
             }
         }
 
-        private void Coupon_Added_Click(object sender, RoutedEventArgs e)
-        {
-            Coupon couponToActivate = coupons.FirstOrDefault(x => x.name == Coupon_Field.Text.ToLower());
-
-            Coupon_Field.Text = "";
-            if (couponToActivate == null || usedCoupons.FirstOrDefault(x => x == couponToActivate) != null ? true : false)
-            {
-                MessageBox.Show("This is not a valid Coupon code.");
-                return;
-            }
-
-            if (activeCoupons != null)
-            {
-                MessageBox.Show("A coupon has already been used during this checkout session.");
-                return;
-            }
-
-            Discounted_Stackpanel.Visibility = Visibility.Visible;
-            activeCoupons = couponToActivate;
-            CartTotal.Text = GetTotal();
-        }
     }
 }
