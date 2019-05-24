@@ -1,13 +1,13 @@
-﻿using FontAwesome.WPF;
-using Newtonsoft.Json;
-using ShoppingCart.Models;
-using System;
-using System.Collections.ObjectModel;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Controls;
+using System.Collections.ObjectModel;
+using Newtonsoft.Json;
+using FontAwesome.WPF;
+using ShoppingCart.Models;
 
 namespace ShoppingCart
 {
